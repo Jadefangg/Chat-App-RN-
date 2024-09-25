@@ -1,6 +1,10 @@
 import { StyleSheet, View, Text } from 'react-native';
 
-const Screen2 = () => {
+const Screen2 = ({route,navigation}) => {
+    const { name } = route.params;
+    useEffect(() => {
+        navigation.setOptions({ title: name });
+      }, []);
  return (
    <View style={styles.container}>
      <Text>Hello Screen2!</Text>
