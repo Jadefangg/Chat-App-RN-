@@ -1,3 +1,4 @@
+import React, { useEffect } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 
 const Screen2 = ({route,navigation}) => {
@@ -7,13 +8,13 @@ const Screen2 = ({route,navigation}) => {
       }, []);
  return (
    <View style={styles.container}>
-     <Text>Hello Screen2!</Text>
+     <Text>Hello Screen!</Text>
    </View>
  );
 }
 
 const styles = StyleSheet.create({
- container: {
+ container: { 
    flex: 1,
    justifyContent: 'center',
    alignItems: 'center'
