@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState , KeyboardAvoidingView , Platform} from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { GiftedChat } from "react-native-gifted-chat";
 
@@ -25,6 +25,7 @@ const Chat = () => {
   }
   
   return (
+    <View style={styles.container}>
     <GiftedChat
       messages={messages}
       onSend={newMessages => onSend(newMessages)}
@@ -32,9 +33,10 @@ const Chat = () => {
         _id: 1,
       }}
     />
+      { Platform.OS === 'android' ? <KeyboardAvoidingView behavior="height" /> : null }
+    </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
