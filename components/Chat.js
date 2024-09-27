@@ -1,14 +1,14 @@
 import React, { useEffect, useState , KeyboardAvoidingView , Platform} from 'react';
 import { StyleSheet, View, Text } from 'react-native';
-import { GiftedChat, Bubble } from "react-native-gifted-chat";
+import { GiftedChat, Bubble } from "react-native-gifted-chat"; //Chat framework and its prop.
 
 
 
-const Chat = () => {
+const Chat = () => { //Chat function wth 2 users and messages.
   const [messages, setMessages] = useState([]);
   useEffect(() => {
     setMessages([
-      {
+      {//Message 1
         _id: 1,
         text: "Hello developer",
         createdAt: new Date(),
@@ -18,7 +18,7 @@ const Chat = () => {
           avatar: "https://placeimg.com/140/140/any",
         },
       },
-      {
+      {//Message 2
         _id: 2,
         text: 'This is a system message', 
         createdAt: new Date(),
@@ -29,26 +29,29 @@ const Chat = () => {
   const onSend = (newMessages) => {
     setMessages(previousMessages => GiftedChat.append(previousMessages, newMessages))
   }
+  const onPress = () => {
+    // Handle button press
+  };
   
   return (
     <View style={styles.container}>
     <GiftedChat
       messages={messages}
-      renderBubble={renderBubble}
+      renderBubble={renderBubble} //Prop which lets us customise chat speech bubbles.
       onSend={newMessages => onSend(newMessages)}
       user={{
         _id: 1,
       }}
     />
-      { Platform.OS === 'android' ? <KeyboardAvoidingView behavior="height" /> : null }
-      <TouchableOpacity
+      { Platform.OS === 'android' ? <KeyboardAvoidingView behavior="height" /> : null } //Prop which makes sure textbox isn't hidden by keyboard.
+      <TouchableOpacity //Accessibility features
   accessible={true}
   accessibilityLabel="More options"
   accessibilityHint="Lets you choose to send an image or your geolocation."
   accessibilityRole="button"
   onPress={onPress}>
-    
-  <View style={styles.button}>
+
+  <View style={styles.button}> 
    ...
   </View>
 </TouchableOpacity>
