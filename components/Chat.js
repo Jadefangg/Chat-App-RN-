@@ -1,6 +1,6 @@
 import React, { useEffect, useState , KeyboardAvoidingView , Platform} from 'react';
 import { StyleSheet, View, Text } from 'react-native';
-import { GiftedChat } from "react-native-gifted-chat";
+import { GiftedChat, Bubble } from "react-native-gifted-chat";
 
 
 
@@ -18,6 +18,12 @@ const Chat = () => {
           avatar: "https://placeimg.com/140/140/any",
         },
       },
+      {
+        _id: 2,
+        text: 'This is a system message', 
+        createdAt: new Date(),
+        system: true,
+      },
     ]);
   }, []);
   const onSend = (newMessages) => {
@@ -28,15 +34,41 @@ const Chat = () => {
     <View style={styles.container}>
     <GiftedChat
       messages={messages}
+      renderBubble={renderBubble}
       onSend={newMessages => onSend(newMessages)}
       user={{
         _id: 1,
       }}
     />
       { Platform.OS === 'android' ? <KeyboardAvoidingView behavior="height" /> : null }
+      <TouchableOpacity
+  accessible={true}
+  accessibilityLabel="More options"
+  accessibilityHint="Lets you choose to send an image or your geolocation."
+  accessibilityRole="button"
+  onPress={onPress}>
+    
+  <View style={styles.button}>
+   ...
+  </View>
+</TouchableOpacity>
     </View>
   );
 };
+
+const renderBubble = (props) => { //BUBBLE//
+  return <Bubble
+    {...props}
+    wrapperStyle={{
+      right: {
+        backgroundColor: "#000"
+      },
+      left: {
+        backgroundColor: "#FFF"
+      }
+    }}
+  />
+}
 const styles = StyleSheet.create({
   container: {
     flex: 1,
