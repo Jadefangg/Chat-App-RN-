@@ -1,3 +1,4 @@
+//TEST RUN ON EXPO GO HAS TO BE DONE <<<<
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, KeyboardAvoidingView, Platform, TouchableOpacity } from 'react-native';
 import { GiftedChat, Bubble } from "react-native-gifted-chat"; // Chat framework and its prop.
