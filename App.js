@@ -1,11 +1,8 @@
+import React from 'react';
 import { initializeApp } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore'; // Import the functions you need from the SDKs you need
-// import react Navigation
+import { getFirestore } from 'firebase/firestore';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-//import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-// import the screens
 import Start from './components/Start';
 import Chat from './components/Chat';
 
@@ -14,8 +11,7 @@ const Stack = createNativeStackNavigator();
 
 const App = () => {
   // Your web app's Firebase configuration
-  const firebaseConfig = { //this is the configuration for the firebase app and is unique to your app
-    //All of the following should be stored in environment variables for proper practice and security - this is just for demonstration purposes.
+  const firebaseConfig = {
     apiKey: "AIzaSyALAciQB_zxI8PgiZw6YM-J0wY5iE0R4z4",
     authDomain: "shopping-list-demo-b3785.firebaseapp.com",
     projectId: "shopping-list-demo-b3785",

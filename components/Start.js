@@ -9,7 +9,7 @@ const Start = ({ navigation }) => {
   // State to set background color
   const [background, setBackground] = useState('');
 
-  const backgroundImage = require('../img/BackgroundImage.png');
+  const backgroundImage = require('../img/backgroundimage.jpg');
 
   const auth = getAuth();
 
