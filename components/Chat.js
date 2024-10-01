@@ -7,30 +7,24 @@ const Chat = () => { // Chat function with 2 users and messages.
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {
-    setMessages([
-      {// Message 1
-        _id: 1,
-        text: "Hello developer",
-        createdAt: new Date(),
-        user: {
-          _id: 2,
-          name: "React Native",
-          avatar: "https://placeimg.com/140/140/any",
-        },
-      },
-      {// Message 2
-        _id: 2,
-        text: 'This is a system message', 
-        createdAt: new Date(),
-        system: true,
-      },
-    ]);
+    const unsub = onSnapshot(collection(db, "messages"), (documentsSnapshot) => {
+      let newMessages = [];
+      documentsSnapshot.forEach(doc => {
+        newMessages.push({ id: doc.id, ...doc.data() })
+      });
+      setMessages(newMessages);
+    });
+
+    // this is used to unsubscribe from the snapshot listener and clean up the listener
+    return () => {
+      if (unsub) unsub();
+    }
+   
   }, []);
 
   const onSend = (newMessages) => {
-    setMessages(previousMessages => GiftedChat.append(previousMessages, newMessages));
-  };
-
+    addDoc(collection(db, "messages"), newMessages[0])
+  }
   const onPress = () => {
     // Handle button press
   };
