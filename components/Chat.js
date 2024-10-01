@@ -1,5 +1,6 @@
 //TEST RUN ON EXPO GO HAS TO BE DONE <<<<
 import React, { useEffect, useState } from 'react';
+import { collection, onSnapshot, addDoc } from 'firebase/firestore'; // Import the functions you need from the SDKs you need
 import { StyleSheet, View, Text, KeyboardAvoidingView, Platform, TouchableOpacity } from 'react-native';
 import { GiftedChat, Bubble } from "react-native-gifted-chat"; // Chat framework and its prop.
 
@@ -22,10 +23,13 @@ const Chat = () => { // Chat function with 2 users and messages.
    
   }, []);
 
-  const onSend = (newMessages) => {
-    addDoc(collection(db, "messages"), newMessages[0])
-  }
-  const onPress = () => {
+  const onSend = async (newMessages) => { //error handling for onSend addDoc!
+    try {
+      await addDoc(collection(db, "messages"), newMessages[0]);
+    } catch (error) {
+      Alert.alert('Error sending message:', error.message);
+    }
+  };  const onPress = () => {
     // Handle button press
   };
 
