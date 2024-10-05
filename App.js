@@ -37,12 +37,13 @@ const App = () => {
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
+  //the db variable is passed as a db prop however, the db prop can be passed under a different name - eg. db={database}
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Start">
         <Stack.Screen name="Start" component={Start} />
         <Stack.Screen name="Chat">
-          {props => <Chat isConnected={connectionStatus.isConnected} db={db} {...props} />}
+          {props => <Chat isConnected={connectionStatus.isConnected} db={db} {...props} />}  
         </Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>

@@ -4,10 +4,11 @@ import { GiftedChat, Bubble } from "react-native-gifted-chat";
 import { collection, onSnapshot, query, where } from 'firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Chat = ({ db, userID, isConnected, cachemessages, loadCachedLists }) => {
+const Chat = ({ db, userID, isConnected, cachemessages, loadCachedMessages}) => { //CHAT COMPONENT
   const [messages, setMessages] = useState([]);
   let unsub;
-
+     //cachemessages is used to cache messages when user is online and helps us implement asyncstorage.
+     //loadCahedMessages is used to load/retrieve the cached/saved messages when the user is offline.
   useEffect(() => {
     const fetchMessages = async () => {
       if (isConnected) {
@@ -22,7 +23,7 @@ const Chat = ({ db, userID, isConnected, cachemessages, loadCachedLists }) => {
             newMessages.push({ id: doc.id, ...doc.data() });
           });
           try {
-            await cachemessages(newMessages);
+            await cachemessages(newMessages); //CACHEMESSAGES PASSED AS A
           } catch (error) {
             console.error("Error caching messages:", error);
           }
@@ -30,7 +31,7 @@ const Chat = ({ db, userID, isConnected, cachemessages, loadCachedLists }) => {
         });
       } else {
         try {
-          await loadCachedLists(); //calls the loadCachedList function and waits for it to complete.
+          await loadCachedMessages(); //calls the loadCachedList function and waits for it to complete.
           //the await keyword is used so that the loadCached Lists can first be resolved before being executed.
         } catch (error) {
           console.error("Error loading cached lists:", error);
@@ -44,7 +45,7 @@ const Chat = ({ db, userID, isConnected, cachemessages, loadCachedLists }) => {
     return () => {
       if (unsub) unsub();
     };
-  }, [isConnected, db, userID, cachemessages, loadCachedLists]);
+  }, [isConnected, db, userID, cachemessages, loadCachedMessages]);
 
   return (
     <View style={styles.container}>
