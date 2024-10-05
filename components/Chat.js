@@ -1,76 +1,66 @@
-//TEST RUN ON EXPO GO HAS TO BE DONE <<<<
-import React, { useEffect, useState } from 'react';
-import { collection, onSnapshot, addDoc } from 'firebase/firestore'; // Import the functions you need from the SDKs you need
+import { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, KeyboardAvoidingView, Platform, TouchableOpacity } from 'react-native';
-import { GiftedChat, Bubble } from "react-native-gifted-chat"; // Chat framework and its prop.
+import { GiftedChat, Bubble } from "react-native-gifted-chat";
+import { collection, onSnapshot, query, where } from 'firebase/firestore';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Chat = () => { // Chat function with 2 users and messages.
+const Chat = ({ db, userID, isConnected, cachemessages, loadCachedLists }) => {
   const [messages, setMessages] = useState([]);
+  let unsub;
 
   useEffect(() => {
-    const unsub = onSnapshot(collection(db, "messages"), (documentsSnapshot) => {
-      let newMessages = [];
-      documentsSnapshot.forEach(doc => {
-        newMessages.push({ id: doc.id, ...doc.data() })
-      });
-      setMessages(newMessages);
-    });
+    const fetchMessages = async () => {
+      if (isConnected) {
+        // Unregister current onSnapshot() listener to avoid registering multiple listeners
+        if (unsub) unsub();
+        unsub = null;
 
-    // this is used to unsubscribe from the snapshot listener and clean up the listener
+        const q = query(collection(db, "messages"), where("uid", "==", userID));
+        unsub = onSnapshot(q, async (documentsSnapshot) => {
+          let newMessages = [];
+          documentsSnapshot.forEach(doc => {
+            newMessages.push({ id: doc.id, ...doc.data() });
+          });
+          try {
+            await cachemessages(newMessages);
+          } catch (error) {
+            console.error("Error caching messages:", error);
+          }
+          setMessages(newMessages);
+        });
+      } else {
+        try {
+          await loadCachedLists();
+        } catch (error) {
+          console.error("Error loading cached lists:", error);
+        }
+      }
+    };
+
+    fetchMessages();
+
+    // Clean up code
     return () => {
       if (unsub) unsub();
-    }
-   
-  }, []);
-
-  const onSend = async (newMessages) => { //error handling for onSend addDoc!
-    try {
-      await addDoc(collection(db, "messages"), newMessages[0]);
-    } catch (error) {
-      Alert.alert('Error sending message:', error.message);
-    }
-  };  const onPress = () => {
-    // Handle button press
-  };
-
-  const renderBubble = (props) => { // BUBBLE
-    return (
-      <Bubble
-        {...props}
-        wrapperStyle={{
-          right: {
-            backgroundColor: "#000"
-          },
-          left: {
-            backgroundColor: "#FFF"
-          }
-        }}
-      />
-    );
-  };
+    };
+  }, [isConnected, db, userID, cachemessages, loadCachedLists]);
 
   return (
     <View style={styles.container}>
       <GiftedChat
         messages={messages}
-        renderBubble={renderBubble} // Prop which lets us customize chat speech bubbles.
-        onSend={newMessages => onSend(newMessages)}
-        user={{
-          _id: 1,
-        }}
+        user={{ _id: userID }}
+        renderBubble={(props) => (
+          <Bubble
+            {...props}
+            wrapperStyle={{
+              right: {
+                backgroundColor: '#0084ff'
+              }
+            }}
+          />
+        )}
       />
-      {Platform.OS === 'android' ? <KeyboardAvoidingView behavior="height" /> : null} {/* Prop which makes sure textbox isn't hidden by keyboard. */}
-      <TouchableOpacity // Accessibility features
-        accessible={true}
-        accessibilityLabel="More options"
-        accessibilityHint="Lets you choose to send an image or your geolocation."
-        accessibilityRole="button"
-        onPress={onPress}
-      >
-        <View style={styles.button}> 
-          {/* Add button content here */}
-        </View>
-      </TouchableOpacity>
     </View>
   );
 };
@@ -78,11 +68,6 @@ const Chat = () => { // Chat function with 2 users and messages.
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  button: {
-    // Add button styles here
   },
 });
 
