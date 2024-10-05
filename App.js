@@ -3,6 +3,7 @@ import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { getFirestore, disableNetwork, enableNetwork } from "firebase/firestore";
 import { useNetInfo }from '@react-native-community/netinfo'; // <<<<< this isn't a regular function it acts as a react hook.
 import { useEffect } from 'react';
 import { LogBox, Alert } from 'react-native';
@@ -14,8 +15,13 @@ const Stack = createNativeStackNavigator();
 
 const App = () => {
   const connectionStatus = useNetInfo();
-  useEffect(() => { //ALERT POPUP
-    if (connectionStatus.isConnected === false) Alert.alert("Connection lost!")
+  useEffect(() => {
+    if (connectionStatus.isConnected === false) {
+      Alert.alert("Connection Lost!");
+      disableNetwork(db);
+    } else if (connectionStatus.isConnected === true) {
+      enableNetwork(db);
+    }
   }, [connectionStatus.isConnected]);
   // Your web app's Firebase configuration
   const firebaseConfig = {
