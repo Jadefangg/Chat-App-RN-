@@ -13,6 +13,10 @@ import Chat from './components/Chat';
 const Stack = createNativeStackNavigator();
 
 const App = () => {
+  const connectionStatus = useNetInfo();
+  useEffect(() => { //ALERT POPUP
+    if (connectionStatus.isConnected === false) Alert.alert("Connection lost!")
+  }, [connectionStatus.isConnected]);
   // Your web app's Firebase configuration
   const firebaseConfig = {
     apiKey: "AIzaSyALAciQB_zxI8PgiZw6YM-J0wY5iE0R4z4",
