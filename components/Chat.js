@@ -23,7 +23,7 @@ const Chat = ({ db, userID, isConnected, cachemessages, loadCachedMessages}) => 
             newMessages.push({ id: doc.id, ...doc.data() });
           });
           try {
-            await cachemessages(newMessages); //CACHEMESSAGES PASSED AS A
+            await cachemessages(newMessages); //CACHEMESSAGES 
           } catch (error) {
             console.error("Error caching messages:", error);
           }
