@@ -30,7 +30,8 @@ const Chat = ({ db, userID, isConnected, cachemessages, loadCachedLists }) => {
         });
       } else {
         try {
-          await loadCachedLists();
+          await loadCachedLists(); //calls the loadCachedList function and waits for it to complete.
+          //the await keyword is used so that the loadCached Lists can first be resolved before being executed.
         } catch (error) {
           console.error("Error loading cached lists:", error);
         }
