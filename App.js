@@ -3,7 +3,9 @@ import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { useNetInfo }from '@react-native-community/netinfo';
+import { useNetInfo }from '@react-native-community/netinfo'; // <<<<< this isn't a regular function it acts as a react hook.
+import { useEffect } from 'react';
+import { LogBox, Alert } from 'react-native';
 import Start from './components/Start';
 import Chat from './components/Chat';
 
