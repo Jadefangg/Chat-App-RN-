@@ -13,14 +13,14 @@ import Chat from './components/Chat';
 // Create the navigator
 const Stack = createNativeStackNavigator();
 
-const App = () => {
+const App = () => { //NetInfo Implemented with its alert.
   const connectionStatus = useNetInfo();
   useEffect(() => {
     if (connectionStatus.isConnected === false) {
       Alert.alert("Connection Lost!");
-      disableNetwork(db);
+      disableNetwork(db); //offline implemented
     } else if (connectionStatus.isConnected === true) {
-      enableNetwork(db);
+      enableNetwork(db); //online implemented
     }
   }, [connectionStatus.isConnected]);
   // Your web app's Firebase configuration

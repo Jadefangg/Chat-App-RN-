@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, KeyboardAvoidingView, Platform, TouchableOpacit
 import { GiftedChat, Bubble } from "react-native-gifted-chat";
 import { collection, onSnapshot, query, where } from 'firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import CustomActions from './CustomActions';
 
 const Chat = ({ db, userID, isConnected, cachemessages, loadCachedMessages}) => { //CHAT COMPONENT
   const [messages, setMessages] = useState([]);
@@ -22,8 +23,8 @@ const Chat = ({ db, userID, isConnected, cachemessages, loadCachedMessages}) => 
           documentsSnapshot.forEach(doc => {
             newMessages.push({ id: doc.id, ...doc.data() });
           });
-          try {
-            await cachemessages(newMessages); //CACHEMESSAGES 
+          try { //  >>>>  TRY CATCH BLOCK <<<<<<<<<<
+            await cachemessages(newMessages); //this function saves the messages to asyncstorage.
           } catch (error) {
             console.error("Error caching messages:", error);
           }
