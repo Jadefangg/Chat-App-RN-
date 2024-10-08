@@ -90,6 +90,7 @@ const CustomActions = ({ wrapperStyle, iconTextStyle, onSend, storage, userID })
       );
 }
 
+
 const styles = StyleSheet.create({
     container: {
       width: 26,
