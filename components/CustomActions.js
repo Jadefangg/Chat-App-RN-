@@ -1,35 +1,35 @@
 import { TouchableOpacity, Text, View, StyleSheet, Alert } from "react-native";
 import { useActionSheet } from '@expo/react-native-action-sheet';
-import * as ImagePicker from 'expo-image-picker';
+import * as ImagePicker from 'expo-image-picker'; //importing all the ImagePicker module offers from expo-image-picker.
 import * as Location from 'expo-location';
-//import MapView from 'react-native-maps';
+//import MapView from 'react-native-maps'; NOT NEEDED in this file.
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 const CustomActions = ({ wrapperStyle, iconTextStyle, onSend, storage, userID }) => {//this function gives the user the ability to take a photo, choose a photo from the library, or send their location.
 
-    const actionSheet = useActionSheet();
+    const actionSheet = useActionSheet(); //hook for action sheet, the action sheet will be used to display the options to the user.
 
-    const generateReference = (uri) => {
+    const generateReference = (uri) => { //this function generates a unique reference for the image that is being uploaded.
         const timeStamp = (new Date()).getTime();
         const imageName = uri.split("/")[uri.split("/").length - 1];
         return `${userID}-${timeStamp}-${imageName}`;
       }
-      const getLocation = async () => {
+      const getLocation = async () => {//this function gets the user's location permissions and sends it with onSend.
         let permissions = await Location.requestForegroundPermissionsAsync();
         if (permissions?.granted) {
-          const location = await Location.getCurrentPositionAsync({});
+          const location = await Location.getCurrentPositionAsync({});//getCurrentPositionAsync gets the current location of the user.
           if (location) {
             onSend({
-              location: {
+              location: {//this object contains the longitude and latitude of the user's location.
                 longitude: location.coords.longitude,
                 latitude: location.coords.latitude,
               },
             });
           } else Alert.alert("Error occurred while fetching location");
-        } else Alert.alert("Permissions haven't been granted.");
+        } else Alert.alert("Permissions haven't been granted.");//if the user denies the location permissions, an alert will be shown.
     }
 
-    const uploadAndSendImage = async (imageURI) => {
+    const uploadAndSendImage = async (imageURI) => {//this function uploads the image to firebase storage and sends it with onSend.
         const uniqueRefString = generateReference(imageURI);
         const newUploadRef = ref(storage, uniqueRefString);
         const response = await fetch(imageURI);
@@ -40,7 +40,7 @@ const CustomActions = ({ wrapperStyle, iconTextStyle, onSend, storage, userID })
         });
       }
       const pickImage = async () => {
-        let permissions = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        let permissions = await ImagePicker.requestMediaLibraryPermissionsAsync();  //this function gets the user's media library permissions and sends it with onSend.
         if (permissions?.granted) {
           let result = await ImagePicker.launchImageLibraryAsync();
           if (!result.canceled) await uploadAndSendImage(result.assets[0].uri);
