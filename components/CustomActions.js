@@ -2,10 +2,10 @@ import { TouchableOpacity, Text, View, StyleSheet, Alert } from "react-native";
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import * as ImagePicker from 'expo-image-picker';
 import * as Location from 'expo-location';
-import MapView from 'react-native-maps';
+//import MapView from 'react-native-maps';
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
-const CustomActions = ({ wrapperStyle, iconTextStyle, onSend, storage, userID }) => {
+const CustomActions = ({ wrapperStyle, iconTextStyle, onSend, storage, userID }) => {//this function gives the user the ability to take a photo, choose a photo from the library, or send their location.
 
     const actionSheet = useActionSheet();
 

@@ -4,6 +4,7 @@ import { GiftedChat, Bubble } from "react-native-gifted-chat";
 import { collection, onSnapshot, query, where } from 'firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomActions from './CustomActions';
+import MapView from 'react-native-maps';
 
 const Chat = ({ db, userID, isConnected, cachemessages, loadCachedMessages}) => { //CHAT COMPONENT
   const [messages, setMessages] = useState([]);
