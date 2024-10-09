@@ -39,7 +39,7 @@ const CustomActions = ({ wrapperStyle, iconTextStyle, onSend, storage, userID })
           onSend({ image: imageURL })
         });
       }
-      const pickImage = async () => {
+      const pickImage = async () => {//Picks an image from the user's media library and sends it with onSend.
         let permissions = await ImagePicker.requestMediaLibraryPermissionsAsync();  //this function gets the user's media library permissions and sends it with onSend.
         if (permissions?.granted) {
           let result = await ImagePicker.launchImageLibraryAsync();
@@ -48,7 +48,7 @@ const CustomActions = ({ wrapperStyle, iconTextStyle, onSend, storage, userID })
         }
       }
     
-      const takePhoto = async () => {
+      const takePhoto = async () => { //this function gets the user's camera permissions and sends it with onSend.
         let permissions = await ImagePicker.requestCameraPermissionsAsync();
         if (permissions?.granted) {
           let result = await ImagePicker.launchCameraAsync();
@@ -56,16 +56,16 @@ const CustomActions = ({ wrapperStyle, iconTextStyle, onSend, storage, userID })
           else Alert.alert("Permissions haven't been granted.");
         }
       }
-      const onActionPress = () => {
+      const onActionPress = () => {//this function displays the action sheet with the options to the user.
         const options = ['Choose From Library', 'Take Picture', 'Send Location', 'Cancel'];
-        const cancelButtonIndex = options.length - 1;
+        const cancelButtonIndex = options.length - 1; //cancel button will be the last option.
         actionSheet.showActionSheetWithOptions(
           {
             options,
             cancelButtonIndex,
           },
-          async (buttonIndex) => {
-            switch (buttonIndex) {
+          async (buttonIndex) => { //this function will be called when the user selects an option.
+            switch (buttonIndex) {//this switch statement will determine which option the user selected.
               case 0:
                 pickImage();
                 return;
@@ -74,14 +74,14 @@ const CustomActions = ({ wrapperStyle, iconTextStyle, onSend, storage, userID })
                 return;
               case 2:
                 getLocation();
-              default:
+              default://if the user selects cancel, the action sheet will be dismissed.
             }
           },
         );
       };
 
     
-    return (
+    return (//this is the UI for the CustomActions component.
         <TouchableOpacity style={styles.container} onPress={onActionPress}>
           <View style={[styles.wrapper, wrapperStyle]}>
             <Text style={[styles.iconText, iconTextStyle]}>+</Text>
