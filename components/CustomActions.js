@@ -20,7 +20,7 @@ const CustomActions = ({ wrapperStyle, iconTextStyle, onSend, storage, userID })
         let permissions = await Location.requestForegroundPermissionsAsync();
         if (permissions?.granted) {
           const location = await Location.getCurrentPositionAsync({});//getCurrentPositionAsync gets the current location of the user.
-          if (location) {
+          if (location) {//if the location is successfully fetched, the location will be sent with onSend.
             onSend({
               location: {//this object contains the longitude and latitude of the user's location.
                 longitude: location.coords.longitude,
