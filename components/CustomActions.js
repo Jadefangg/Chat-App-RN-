@@ -5,15 +5,17 @@ import * as Location from 'expo-location';
 //import MapView from 'react-native-maps'; NOT NEEDED in this file.
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
+//CUSTOM ACTIONS COMPONENT <<<<<<<<<<<<<<<<<<<<<<<<<<<<
 const CustomActions = ({ wrapperStyle, iconTextStyle, onSend, storage, userID }) => {//this function gives the user the ability to take a photo, choose a photo from the library, or send their location.
-
-    const actionSheet = useActionSheet(); //hook for action sheet, the action sheet will be used to display the options to the user.
-
-    const generateReference = (uri) => { //this function generates a unique reference for the image that is being uploaded.
+  
+  const actionSheet = useActionSheet(); //hook for action sheet, the action sheet will be used to display the options to the user.
+  //0 
+  const generateReference = (uri) => { //this function generates a unique reference string for the image that is being uploaded.
         const timeStamp = (new Date()).getTime();
         const imageName = uri.split("/")[uri.split("/").length - 1];
         return `${userID}-${timeStamp}-${imageName}`;
       }
+    //1
       const getLocation = async () => {//this function gets the user's location permissions and sends it with onSend.
         let permissions = await Location.requestForegroundPermissionsAsync();
         if (permissions?.granted) {
@@ -28,7 +30,7 @@ const CustomActions = ({ wrapperStyle, iconTextStyle, onSend, storage, userID })
           } else Alert.alert("Error occurred while fetching location");
         } else Alert.alert("Permissions haven't been granted.");//if the user denies the location permissions, an alert will be shown.
     }
-
+    //2
     const uploadAndSendImage = async (imageURI) => {//this function uploads the image to firebase storage and sends it with onSend.
         const uniqueRefString = generateReference(imageURI);
         const newUploadRef = ref(storage, uniqueRefString);
@@ -39,6 +41,7 @@ const CustomActions = ({ wrapperStyle, iconTextStyle, onSend, storage, userID })
           onSend({ image: imageURL })
         });
       }
+    //3
       const pickImage = async () => {//Picks an image from the user's media library and sends it with onSend.
         let permissions = await ImagePicker.requestMediaLibraryPermissionsAsync();  //this function gets the user's media library permissions and sends it with onSend.
         if (permissions?.granted) {
@@ -47,7 +50,7 @@ const CustomActions = ({ wrapperStyle, iconTextStyle, onSend, storage, userID })
           else Alert.alert("Permissions haven't been granted.");
         }
       }
-    
+    //4
       const takePhoto = async () => { //this function gets the user's camera permissions and sends it with onSend.
         let permissions = await ImagePicker.requestCameraPermissionsAsync();
         if (permissions?.granted) {
@@ -56,6 +59,7 @@ const CustomActions = ({ wrapperStyle, iconTextStyle, onSend, storage, userID })
           else Alert.alert("Permissions haven't been granted.");
         }
       }
+    //5
       const onActionPress = () => {//this function displays the action sheet with the options to the user.
         const options = ['Choose From Library', 'Take Picture', 'Send Location', 'Cancel'];
         const cancelButtonIndex = options.length - 1; //cancel button will be the last option.
@@ -66,7 +70,7 @@ const CustomActions = ({ wrapperStyle, iconTextStyle, onSend, storage, userID })
           },
           async (buttonIndex) => { //this function will be called when the user selects an option.
             switch (buttonIndex) {//this switch statement will determine which option the user selected.
-              case 0:
+              case 0://if the user selects the first option, the pickImage function will be called.
                 pickImage();
                 return;
               case 1:
@@ -74,14 +78,14 @@ const CustomActions = ({ wrapperStyle, iconTextStyle, onSend, storage, userID })
                 return;
               case 2:
                 getLocation();
-              default://if the user selects cancel, the action sheet will be dismissed.
+              default://default is the cancel button, so nothing will happen if the user selects the cancel button.
             }
           },
         );
       };
 
     
-    return (//this is the UI for the CustomActions component.
+    return (//this is the UI for the CustomActions component. Contains the button that will display the action sheet/options to the user.
         <TouchableOpacity style={styles.container} onPress={onActionPress}>
           <View style={[styles.wrapper, wrapperStyle]}>
             <Text style={[styles.iconText, iconTextStyle]}>+</Text>
