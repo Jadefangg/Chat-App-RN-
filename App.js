@@ -1,4 +1,5 @@
 import React from 'react';
+import * as ImagePicker from 'expo-image-picker';
 import { initializeApp } from 'firebase/app';
 //import { getFirestore } from 'firebase/firestore';
 import { NavigationContainer } from '@react-navigation/native';
