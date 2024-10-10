@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, KeyboardAvoidingView, Platform, TouchableOpacity } from 'react-native';
-import { GiftedChat, Bubble } from "react-native-gifted-chat";
+import { GiftedChat, Bubble, InputToolbar } from "react-native-gifted-chat";
 import { collection, onSnapshot, query, where, addDoc,orderBy } from 'firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomActions from './CustomActions';
@@ -112,7 +112,7 @@ const Chat = ({ route, navigation, db, isConnected, storage }) => {
   
   
     return (
-      <View style={[styles.mcontainer, {backgroundColor: background}]}>
+      <View style={[styles.mcontainer, {backgroundColor: "purple"}]}>
       <GiftedChat
         messages={messages}
         renderBubble={renderBubble}

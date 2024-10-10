@@ -1,64 +1,102 @@
-import React from 'react';
-import * as ImagePicker from 'expo-image-picker';
-import { initializeApp } from 'firebase/app';
-//import { getFirestore } from 'firebase/firestore';
+import React, { useEffect } from 'react';
+import { LogBox, Alert, StyleSheet } from 'react-native';
+import { initializeApp, getApps, getApp } from 'firebase/app';
+import { getFirestore, disableNetwork, enableNetwork } from 'firebase/firestore';
+import { getStorage } from 'firebase/storage';
+import { getAuth, onAuthStateChanged, signInAnonymously, initializeAuth, getReactNativePersistence } from 'firebase/auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { getFirestore, disableNetwork, enableNetwork } from "firebase/firestore";
-import { useNetInfo }from '@react-native-community/netinfo'; // <<<<< this isn't a regular function it acts as a react hook.
-import { useEffect } from 'react';
-import { LogBox, Alert, StyleSheet } from 'react-native';
-import { getStorage } from "firebase/storage";
+import { useNetInfo } from '@react-native-community/netinfo';
 import Start from './components/Start';
 import Chat from './components/Chat';
 
 // Create the navigator
 const Stack = createNativeStackNavigator();
 
-const App = () => { //NetInfo Implemented with its alert.
+// Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyALAciQB_zxI8PgiZw6YM-J0wY5iE0R4z4",
+  authDomain: "shopping-list-demo-b3785.firebaseapp.com",
+  projectId: "shopping-list-demo-b3785",
+  storageBucket: "shopping-list-demo-b3785.appspot.com",
+  messagingSenderId: "738562661564",
+  appId: "1:738562661564:web:99e3159bf3d7a02d5a44b9"
+};
 
-  const connectionStatus = useNetInfo(); //this is a hook that returns the network status of the device.
+// Initialize Firebase
+let app;
+if (getApps().length === 0) {
+  console.log("Initializing Firebase app...");
+  app = initializeApp(firebaseConfig);
+} else {
+  console.log("Firebase app already initialized, using existing app...");
+  app = getApp();
+}
+
+const db = getFirestore(app);
+const storage = getStorage(app);
+let auth;
+try {
+  auth = initializeAuth(app, {
+    persistence: getReactNativePersistence(AsyncStorage)
+  });
+} catch (e) {
+  if (e.code === 'auth/already-initialized') {
+    auth = getAuth(app);
+  } else {
+    throw e;
+  }
+}
+
+const App = () => {
+  const connectionStatus = useNetInfo();
+
   useEffect(() => {
     if (connectionStatus.isConnected === false) {
       Alert.alert("Connection Lost!");
-      disableNetwork(db); //offline implemented
+      disableNetwork(db);
     } else if (connectionStatus.isConnected === true) {
-      enableNetwork(db); //online implemented
+      enableNetwork(db);
     }
   }, [connectionStatus.isConnected]);
-  // Your web app's Firebase configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyALAciQB_zxI8PgiZw6YM-J0wY5iE0R4z4",
-    authDomain: "shopping-list-demo-b3785.firebaseapp.com",
-    projectId: "shopping-list-demo-b3785",
-    storageBucket: "shopping-list-demo-b3785.appspot.com",
-    messagingSenderId: "1234567890",
-    appId: "1:1234567890:web:abcdef123456"
-  };
 
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);//this initializes the firebase app with the firebase configuration.
-  const db = getFirestore(app);//this is the firestore database reference that will be used to read and write data.
-  const storage = getStorage(app); //this is the storage reference that will be used to upload and download images.
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        signInAnonymously(auth)
+          .then(() => {
+            console.log('Signed in anonymously');
+          })
+          .catch((error) => {
+            console.error('Unable to sign in:', error.message);
+            Alert.alert('Unable to sign in', error.message);
+          });
+      }
+    });
 
-  //the db variable is passed as a db prop however, the db prop can be passed under a different name - eg. db={database}
+    return () => unsubscribe();
+  }, []);
+
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Start">
         <Stack.Screen name="Start" component={Start} />
         <Stack.Screen name="Chat">
-          {props => <Chat isConnected={connectionStatus.isConnected} db={db} storage={storage} {...props} />}  
+          {props => <Chat isConnected={connectionStatus.isConnected} db={db} storage={storage} {...props} />}
         </Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );
 };
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#fff',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-// });
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
+
 export default App;
