@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomActions from './CustomActions';
 import MapView from 'react-native-maps';
 
-const Chat = ({ route, navigation, db, isConnected, storage }) => {
+const Chat = ({ route, navigation, db, isConnected, storage }) => {//this function displays the chat screen and allows the user to send messages, images, and locations.
   const { name , background, userID } = route.params;
   const [messages, setMessages] = useState([]);
 
@@ -19,7 +19,7 @@ const Chat = ({ route, navigation, db, isConnected, storage }) => {
   
   let unsub;
 
-  useEffect(() => {
+  useEffect(() => {//this hook listens for changes in the messages collection and updates the messages state accordingly.
 
     if (isConnected === true) {
 
@@ -28,7 +28,7 @@ const Chat = ({ route, navigation, db, isConnected, storage }) => {
       if (unsub) unsub();
       unsub = null;
 
-    const q = query(collection(db, "messages"), orderBy("createdAt", "desc"));
+    const q = query(collection(db, "messages"), orderBy("createdAt", "desc"));// this query gets the messages collection from Firestore and orders the messages by the time they were created.
     unsub = onSnapshot(q, (docs) => {
       let newMessages = [];
       docs.forEach(doc => {
@@ -38,10 +38,10 @@ const Chat = ({ route, navigation, db, isConnected, storage }) => {
           createdAt: new Date(doc.data().createdAt.toMillis())
         })
       })
-      cacheMessages(newMessages);
-      setMessages(newMessages);
+      cacheMessages(newMessages);//this function caches the messages in AsyncStorage.
+      setMessages(newMessages);//this function sets the messages state to the new messages.
     });
-  } else loadCachedMessages();
+  } else loadCachedMessages();//this function loads the cached messages from AsyncStorage if the user is not connected.
 
 
     return () => {
@@ -49,7 +49,7 @@ const Chat = ({ route, navigation, db, isConnected, storage }) => {
     } 
   }, [isConnected]);
 
-    const cacheMessages = async (messagesToCache) => {
+    const cacheMessages = async (messagesToCache) => {//this function caches the messages in AsyncStorage.
       try {
         await AsyncStorage.setItem('messages', JSON.stringify(messagesToCache));
       } catch (error) {
@@ -57,16 +57,16 @@ const Chat = ({ route, navigation, db, isConnected, storage }) => {
       }
     }
   
-    const loadCachedMessages = async () => {
+    const loadCachedMessages = async () => {//this function loads the cached messages from AsyncStorage.
       const cachedMessages = await AsyncStorage.getItem("messages") || [];
       setMessages(JSON.parse(cachedMessages));
     }
   
-    const onSend = (newMessages) => {
+    const onSend = (newMessages) => {//this function sends the new messages to Firestore.
       addDoc(collection(db, "messages"), newMessages[0])
     }
   
-    const renderBubble = (props) => {
+    const renderBubble = (props) => {//this function renders the chat bubbles with different styles for the sender and receiver.
       return <Bubble
         {...props}
         wrapperStyle={{
@@ -80,20 +80,20 @@ const Chat = ({ route, navigation, db, isConnected, storage }) => {
       />
     }
   
-    const renderInputToolbar = (props) => {
+    const renderInputToolbar = (props) => {//this function renders the input toolbar if the user is connected.
       if (isConnected) return <InputToolbar {...props} />;
       else return null;
      }
   
-     const renderCustomActions = (props) => {
+     const renderCustomActions = (props) => {//this function renders the custom actions component.
       return <CustomActions storage={storage} {...props} />;
     };
   
-    const renderCustomView = (props) => {
+    const renderCustomView = (props) => {//this function renders the custom view for the user's location.
       const { currentMessage} = props;
       if (currentMessage.location) {
         return (
-            <MapView
+            <MapView //this map view will display the user's location.
               style={{width: 150,
                 height: 100,
                 borderRadius: 13,
@@ -111,7 +111,7 @@ const Chat = ({ route, navigation, db, isConnected, storage }) => {
     }
   
   
-    return (
+    return (//this function returns the GiftedChat component with the messages, renderBubble, renderInputToolbar, renderCustomActions, and renderCustomView functions.
       <View style={[styles.mcontainer, {backgroundColor: "purple"}]}>
       <GiftedChat
         messages={messages}

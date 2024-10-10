@@ -34,34 +34,34 @@ if (getApps().length === 0) {
   app = getApp();
 }
 
-const db = getFirestore(app);
-const storage = getStorage(app);
-let auth;
+const db = getFirestore(app); // Initialize Firestore
+const storage = getStorage(app);// Initialize Firebase Storage
+let auth;// Initialize Firebase Auth
 try {
-  auth = initializeAuth(app, {
+  auth = initializeAuth(app, {// Initialize Firebase Auth with persistence
     persistence: getReactNativePersistence(AsyncStorage)
   });
 } catch (e) {
   if (e.code === 'auth/already-initialized') {
-    auth = getAuth(app);
+    auth = getAuth(app);//this block of code checks if the user is already signed in and signs them in anonymously if they are not.
   } else {
     throw e;
   }
 }
 
-const App = () => {
+const App = () => {//this function checks the user's connection status and signs them in anonymously if they are not signed in.
   const connectionStatus = useNetInfo();
 
-  useEffect(() => {
+  useEffect(() => {//this hook checks the user's connection status and disables the network if the user is not connected.
     if (connectionStatus.isConnected === false) {
       Alert.alert("Connection Lost!");
-      disableNetwork(db);
+      disableNetwork(db);//disables the network if the user is not connected.
     } else if (connectionStatus.isConnected === true) {
-      enableNetwork(db);
+      enableNetwork(db);//enables the network if the user is connected.
     }
-  }, [connectionStatus.isConnected]);
+  }, [connectionStatus.isConnected]);//this hook runs when the user's connection status changes.
 
-  useEffect(() => {
+  useEffect(() => {//this hook checks if the user is signed in and signs them in anonymously if they are not.
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (!user) {
         signInAnonymously(auth)
@@ -78,7 +78,7 @@ const App = () => {
     return () => unsubscribe();
   }, []);
 
-  return (
+  return (//this function returns the navigation container with the stack navigator and the start and chat screens.
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Start">
         <Stack.Screen name="Start" component={Start} />
