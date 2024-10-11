@@ -15,14 +15,23 @@ import Chat from './components/Chat';
 const Stack = createNativeStackNavigator();
 
 // Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyALAciQB_zxI8PgiZw6YM-J0wY5iE0R4z4",
-  authDomain: "shopping-list-demo-b3785.firebaseapp.com",
-  projectId: "shopping-list-demo-b3785",
-  storageBucket: "shopping-list-demo-b3785.appspot.com",
-  messagingSenderId: "738562661564",
-  appId: "1:738562661564:web:99e3159bf3d7a02d5a44b9"
-};
+ const firebaseConfig = {
+   apiKey: "AIzaSyALAciQB_zxI8PgiZw6YM-J0wY5iE0R4z4",
+   authDomain: "shopping-list-demo-b3785.firebaseapp.com",
+   projectId: "shopping-list-demo-b3785",
+   storageBucket: "shopping-list-demo-b3785.appspot.com",
+   messagingSenderId: "1234567890",
+   appId: "1:1234567890:web:abcdef123456"
+ };
+// Your web app's Firebase configuration
+// const firebaseConfig = {
+//   apiKey: "AIzaSyALAciQB_zxI8PgiZw6YM-J0wY5iE0R4z4",
+//   authDomain: "shopping-list-demo-b3785.firebaseapp.com",
+//   projectId: "shopping-list-demo-b3785",
+//   storageBucket: "shopping-list-demo-b3785.appspot.com",
+//   messagingSenderId: "738562661564",
+//   appId: "1:738562661564:web:99e3159bf3d7a02d5a44b9"
+// };
 
 // Initialize Firebase
 let app;
