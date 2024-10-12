@@ -7,7 +7,7 @@ import { ref, uploadBytes, getDownloadURL} from "firebase/storage";
 const CustomActions = ({ wrapperStyle, iconTextStyle, storage, onSend, userID }) => {
   const actionSheet = useActionSheet();
 
-  const onActionPress = () => {
+  const onActionPress = () => {//this function will open the action sheet when the user presses the '+' button
     const options = ['Choose From Library', 'Take Picture', 'Send Location', 'Cancel'];
     const cancelButtonIndex = options.length - 1;
     actionSheet.showActionSheetWithOptions(
@@ -15,7 +15,7 @@ const CustomActions = ({ wrapperStyle, iconTextStyle, storage, onSend, userID })
         options,
         cancelButtonIndex,
       },
-      async (buttonIndex) => {
+      async (buttonIndex) => {//this function will allow the user to choose an option from the action sheet
         switch (buttonIndex) {
           case 0:
             pickImage();
@@ -31,16 +31,16 @@ const CustomActions = ({ wrapperStyle, iconTextStyle, storage, onSend, userID })
     );
   };
 
-  const pickImage = async () => {
+  const pickImage = async () => {//this function will allow the user to pick an image from the library
     let permissions = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (permissions?.granted) {
-      let result = await ImagePicker.launchImageLibraryAsync();
+      let result = await ImagePicker.launchImageLibraryAsync();//this function will launch the image library
       if (!result.canceled) await uploadAndSendImage(result.assets[0].uri);
       else Alert.alert("Permissions haven't been granted.");
     }
   }
 
-  const takePhoto = async () => {
+  const takePhoto = async () => {//this function will allow the user to take a photo
     let permissions = await ImagePicker.requestCameraPermissionsAsync();
     if (permissions?.granted) {
       let result = await ImagePicker.launchCameraAsync();
@@ -49,15 +49,15 @@ const CustomActions = ({ wrapperStyle, iconTextStyle, storage, onSend, userID })
     }
   }
 
-  const getLocation = async () => {
+  const getLocation = async () => {//this function will allow the user to send their location
     try {
-      let { status } = await Location.requestForegroundPermissionsAsync();
+      let { status } = await Location.requestForegroundPermissionsAsync();//this function will request the user's location
       if (status !== 'granted') {
         Alert.alert("Permission to access location was denied");
         return;
       }
 
-      let location = await Location.getCurrentPositionAsync({});
+      let location = await Location.getCurrentPositionAsync({});//this function will get the user's current location
       if (location) {
         onSend([{
           _id: `${userID}-${new Date().getTime()}`, // Generate a unique ID
@@ -78,14 +78,14 @@ const CustomActions = ({ wrapperStyle, iconTextStyle, storage, onSend, userID })
       Alert.alert("Error fetching location", error.message);
     }
   };
-    const generateReference = (uri) => {
+    const generateReference = (uri) => {//this function will generate a reference for the image
     // this will get the file name from the uri
     const imageName = uri.split("/")[uri.split("/").length - 1];
     const timeStamp = (new Date()).getTime();
     return `${userID}-${timeStamp}-${imageName}`;
   }
 
-  const uploadAndSendImage = async (imageURI) => {
+  const uploadAndSendImage = async (imageURI) => {//this function will upload the image and send it
     const uniqueRefString = generateReference(imageURI);
     const newUploadRef = ref(storage, uniqueRefString);
     const response = await fetch(imageURI);
@@ -105,7 +105,7 @@ const CustomActions = ({ wrapperStyle, iconTextStyle, storage, onSend, userID })
     });
   };
 
-  return (
+  return (//this is the '+' button that will open the action sheet
     <TouchableOpacity 
       style={styles.container}
       onPress={onActionPress}

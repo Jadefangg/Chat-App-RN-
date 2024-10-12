@@ -10,20 +10,20 @@ const Chat = ({ route, navigation, db, isConnected, storage }) => {
   const { name, background, userID } = route.params;
   const [messages, setMessages] = useState([]);
 
-  useEffect(() => {
+  useEffect(() => { // Set the title and color of the chat screen
     navigation.setOptions({ title: name, color: background });
   }, []);
 
   let unsub;
 
-  useEffect(() => {
+  useEffect(() => {// Load messages from Firestore
     if (isConnected === true) {
       if (unsub) unsub();
       unsub = null;
 
       const q = query(collection(db, "messages"), orderBy("createdAt", "desc"));
       unsub = onSnapshot(q, (docs) => {
-        let newMessages = [];
+        let newMessages = [];// this allows us to store the messages in the state
         docs.forEach(doc => {
           newMessages.push({
             id: doc.id,

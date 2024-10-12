@@ -24,7 +24,7 @@ const Start = ({ navigation }) => {
         Alert.alert("Unable to sign in, try later again.");
       });
   }
-  return (
+  return (//this is the start screen of the app
     <ImageBackground
       source={require('../img/backgroundimage.jpg')}
       style={styles.container} 
@@ -53,6 +53,7 @@ const Start = ({ navigation }) => {
               )}
             />
           )}
+          
         </View>
         <TouchableOpacity
           style={styles.touchable}
